@@ -1,12 +1,8 @@
-.PHONY: c add_path_comment
-.PHONY: p prompt
+.PHONY: path-comment
+.PHONY: py-concat
 
-c: add_path_comment
+path-comment:
+	asmobelt path-comment -d backend/app/ || true
 
-add_path_comment:
-	asmobelt path-comment -d asmobelt/ || true
-
-p: prompt
-
-prompt:
-	asmobelt py-concat -p asmobelt/ -o prompt_backend_app.txt || true
+py-concat:
+	asmobelt py-concat -p backend/app/ -o prompt_backend_app.txt || true
