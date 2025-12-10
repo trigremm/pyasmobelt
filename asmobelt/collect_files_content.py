@@ -1,4 +1,4 @@
-# asmo.d/utils/py_utils/collect_files_content.py
+# collect_files_content.py
 import argparse
 from pathlib import Path
 

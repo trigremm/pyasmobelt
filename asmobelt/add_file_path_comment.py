@@ -1,4 +1,4 @@
-# asmo.d/utils/py_utils/add_file_path_comment.py
+# add_file_path_comment.py
 """
 Add a file-path comment as the first line of supported source files.
 

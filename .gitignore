@@ -1,5 +1,8 @@
 .idea
 .vscode
 
+pyasmobelt.egg-info
+__pycache__/
+
 .env
-howto.deploy.txt
+prompt*.txt

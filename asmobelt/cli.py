@@ -1,3 +1,4 @@
+# cli.py
 #!/usr/bin/env python3
 """
 CLI wrapper that dispatches to the appropriate tool inside asmobelt.
