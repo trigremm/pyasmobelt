@@ -6,7 +6,7 @@ from .collect_files_content import main as collect_main
 
 COMMANDS = {
     "py-concat": collect_main,
-    "path-comment": path_comment_main,
+    "add-path-comment": path_comment_main,
 }
 
 
@@ -20,7 +20,7 @@ Usage:
 
 Commands:
   py-concat
-  path-comment
+  add-path-comment
 """
     )
 
