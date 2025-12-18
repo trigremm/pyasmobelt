@@ -23,7 +23,7 @@ asmobelt <command> [options]
 ```
 
 **Commands:**
-- `py-concat` - Concatenate file contents into a single output file (useful for LLM prompts)
+- `concat-py-files` - Concatenate file contents into a single output file (useful for LLM prompts)
 - `add-path-comment` - Add file path as first-line comment to source files
 
 ## Architecture

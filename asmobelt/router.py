@@ -5,7 +5,7 @@ from .add_file_path_comment import main as path_comment_main
 from .collect_files_content import main as collect_main
 
 COMMANDS = {
-    "py-concat": collect_main,
+    "concat-py-files": collect_main,
     "add-path-comment": path_comment_main,
 }
 
@@ -19,7 +19,7 @@ Usage:
   asmobelt <command> [options]
 
 Commands:
-  py-concat
+  concat-py-files
   add-path-comment
 """
     )
