@@ -41,6 +41,6 @@ def main(argv=None):
         return 1
 
     # Remove the command from sys.argv so underlying argparse sees clean args
-    sys.argv = [argv[0]] + argv[2:]
+    sys.argv = [f"{argv[0]} {cmd}"] + argv[2:]
 
     return COMMANDS[cmd]()
