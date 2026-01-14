@@ -3,10 +3,12 @@ import sys
 
 from .add_file_path_comment import main as path_comment_main
 from .collect_files_content import main as collect_main
+from .uuid import main as uuid_main
 
 COMMANDS = {
     "concat-py-files": collect_main,
     "add-path-comment": path_comment_main,
+    "uuid": uuid_main,
 }
 
 
@@ -21,6 +23,7 @@ Usage:
 Commands:
   concat-py-files
   add-path-comment
+  uuid
 """
     )
 

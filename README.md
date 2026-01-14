@@ -61,6 +61,21 @@ asmobelt add-path-comment -f file1.py file2.js
 git ls-files --modified | asmobelt add-path-comment --stdin --root backend/app
 ```
 
+#### uuid
+
+Generate UUIDs with randomized uppercase letters.
+
+Options:
+- `-n, --count`: number of UUIDs to generate (default: 20)
+- `--upper-ratio`: probability that each hex letter is uppercased (0 to 1)
+- `--block-case`: randomize case per dash-separated block instead of per letter
+
+Example:
+
+```bash
+asmobelt uuid -n 20 --upper-ratio 0.6 --block-case
+```
+
 ## Development
 
 Format code:
