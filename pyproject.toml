@@ -1,6 +1,6 @@
 [project]
 name = "pyasmobelt"
-version = "0.1.5"
+version = "0.1.6"
 description = "Personal CLI toolbox (collect files, add path comments, and more)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -10,8 +10,8 @@ authors = [
   { name = "Askhat Molkenov", email = "asmokah.molkenov@gmail.com" }
 ]
 
-# If your tools someday need deps, add here
 dependencies = [
+    "ruff>=0.4.0",
 ]
 
 # This section defines the console script named `asmobelt`
