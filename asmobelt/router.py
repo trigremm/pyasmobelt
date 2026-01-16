@@ -3,12 +3,24 @@ import sys
 
 from .add_file_path_comment import main as path_comment_main
 from .collect_files_content import main as collect_main
+from .docker import builder_prune_main
+from .docker import container_prune_main
+from .docker import image_prune_main
+from .docker import size_main
+from .docker import stop_all_main
+from .docker import system_prune_main
 from .format import main as format_main
 from .uuid import main as uuid_main
 
 COMMANDS = {
-    "concat-py-files": collect_main,
     "add-path-comment": path_comment_main,
+    "concat-py-files": collect_main,
+    "docker-builder-prune": builder_prune_main,
+    "docker-container-prune": container_prune_main,
+    "docker-image-prune": image_prune_main,
+    "docker-size": size_main,
+    "docker-stop-all": stop_all_main,
+    "docker-system-prune": system_prune_main,
     "format": format_main,
     "uuid": uuid_main,
 }
@@ -23,10 +35,18 @@ Usage:
   asmobelt <command> [options]
 
 Commands:
-  concat-py-files
-  add-path-comment
-  format
-  uuid
+  add-path-comment       Add file path as first-line comment
+  concat-py-files        Concatenate file contents into single output
+  format                 Format Python code using ruff
+  uuid                   Generate UUIDs
+
+Docker (danger zone - some require --confirm):
+  docker-builder-prune   Prune builder cache (>36h)
+  docker-container-prune Prune stopped containers
+  docker-image-prune     Prune dangling images
+  docker-size            Show docker images sizes
+  docker-stop-all        Stop all running containers
+  docker-system-prune    Prune system (containers, networks, images, cache)
 """
     )
 

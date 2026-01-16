@@ -6,7 +6,7 @@ import sys
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Format Python code using ruff (line-length=120, single-line imports, remove unused)."
+        description="Format and lint Python code using ruff (reads config from pyproject.toml)."
     )
     parser.add_argument(
         "path",
@@ -18,40 +18,15 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    ruff_config = "lint.isort.force-single-line=true"
-
     if args.check:
-        # Check mode - just report issues
-        check_cmd = [
-            "ruff",
-            "check",
-            "--select",
-            "I,F401,F841",
-            "--line-length",
-            "120",
-            "--config",
-            ruff_config,
-            args.path,
-        ]
-        format_cmd = ["ruff", "format", "--check", "--line-length", "120", args.path]
+        check_cmd = ["ruff", "check", args.path]
+        format_cmd = ["ruff", "format", "--check", args.path]
     else:
-        # Fix mode - apply changes
-        check_cmd = [
-            "ruff",
-            "check",
-            "--fix",
-            "--select",
-            "I,F401,F841",
-            "--line-length",
-            "120",
-            "--config",
-            ruff_config,
-            args.path,
-        ]
-        format_cmd = ["ruff", "format", "--line-length", "120", args.path]
+        check_cmd = ["ruff", "check", "--fix", args.path]
+        format_cmd = ["ruff", "format", args.path]
 
     try:
-        # Run ruff check (isort + remove unused imports/vars)
+        # Run ruff check (linting: pycodestyle, pyflakes, isort, pylint, etc.)
         subprocess.run(check_cmd, check=False)
         # Run ruff format (black-like formatting)
         result = subprocess.run(format_cmd, check=False)

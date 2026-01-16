@@ -116,10 +116,9 @@ def is_file_path_comment(line: str, comment_syntax: Union[str, Tuple[str, str]])
         if s.startswith(open_tok) and s.endswith(close_tok):
             inner = s[len(open_tok) : -len(close_tok)].strip()
             return _looks_like_file_path(inner)
-    else:
-        if s.startswith(comment_syntax):
-            inner = s[len(comment_syntax) :].strip()
-            return _looks_like_file_path(inner)
+    elif s.startswith(comment_syntax):
+        inner = s[len(comment_syntax) :].strip()
+        return _looks_like_file_path(inner)
 
     return False
 

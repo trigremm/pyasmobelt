@@ -1,6 +1,6 @@
 [project]
 name = "pyasmobelt"
-version = "0.1.6"
+version = "0.1.7"
 description = "Personal CLI toolbox (collect files, add path comments, and more)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -11,7 +11,7 @@ authors = [
 ]
 
 dependencies = [
-    "ruff>=0.4.0",
+    "ruff>=0.14.0",
 ]
 
 # This section defines the console script named `asmobelt`
@@ -21,3 +21,33 @@ asmobelt = "asmobelt.cli:cli"
 [build-system]
 requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes (F401=unused imports, F841=unused vars, etc.)
+    "I",      # isort
+    "C90",    # mccabe complexity
+    "N",      # pep8-naming
+    "PL",     # pylint
+]
+ignore = [
+    "PLR0913",  # too many arguments
+    "PLR2004",  # magic value comparison
+    "PLR0911",  # too many return statements
+    "PLR0912",  # too many branches
+    "C901",     # too complex (covered by mccabe but sometimes too strict)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"asmobelt/cli.py" = ["PLC0415"]  # allow imports inside function (lazy loading)
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
