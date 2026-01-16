@@ -23,7 +23,17 @@ from typing import Union
 # ---------------------------
 # Configuration
 # ---------------------------
-SUPPORTED_EXTENSIONS = [".py", ".yaml", ".yml", ".js", ".ts", ".html", ".vue", ".mk", ".hurl"]
+SUPPORTED_EXTENSIONS = [
+    ".py",
+    ".yaml",
+    ".yml",
+    ".js",
+    ".ts",
+    ".html",
+    ".vue",
+    ".mk",
+    ".hurl",
+]
 SUPPORTED_FILENAMES = ["Dockerfile", "Makefile"]
 DEFAULT_IGNORE_DIRS = {
     "migrations",
@@ -49,7 +59,13 @@ DEFAULT_MAX_REMOVE = 3
 # ---------------------------
 def get_comment_syntax(file_name: str, file_ext: str) -> Union[str, Tuple[str, str], None]:
     """Return appropriate comment token or (open, close) for HTML/Vue."""
-    if file_name in SUPPORTED_FILENAMES or file_ext in [".py", ".yaml", ".yml", ".mk", ".hurl"]:
+    if file_name in SUPPORTED_FILENAMES or file_ext in [
+        ".py",
+        ".yaml",
+        ".yml",
+        ".mk",
+        ".hurl",
+    ]:
         return "#"
     if file_ext in [".js", ".ts"]:
         return "//"
@@ -328,10 +344,15 @@ def main():
         help="Directory names to ignore when using --directory",
     )
     parser.add_argument(
-        "--max-remove", type=int, default=DEFAULT_MAX_REMOVE, help="Max number of existing header lines to remove"
+        "--max-remove",
+        type=int,
+        default=DEFAULT_MAX_REMOVE,
+        help="Max number of existing header lines to remove",
     )
     parser.add_argument(
-        "--no-trim-leading-blank-lines", action="store_true", help="Do not trim blank lines after removing old header"
+        "--no-trim-leading-blank-lines",
+        action="store_true",
+        help="Do not trim blank lines after removing old header",
     )
     parser.add_argument("--dry-run", action="store_true", help="Do not write changes, only report")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")

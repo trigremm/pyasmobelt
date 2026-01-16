@@ -47,7 +47,13 @@ def _ratio(value: str) -> float:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate UUIDs with randomized uppercase letters.")
-    parser.add_argument("-n", "--count", type=_positive_int, default=20, help="Number of UUIDs to generate.")
+    parser.add_argument(
+        "-n",
+        "--count",
+        type=_positive_int,
+        default=20,
+        help="Number of UUIDs to generate.",
+    )
     parser.add_argument(
         "--upper-ratio",
         type=_ratio,

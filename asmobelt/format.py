@@ -8,7 +8,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Format Python code using ruff (line-length=120, single-line imports, remove unused)."
     )
-    parser.add_argument("path", nargs="?", default=".", help="Path to format (default: current directory)")
+    parser.add_argument(
+        "path",
+        nargs="?",
+        default=".",
+        help="Path to format (default: current directory)",
+    )
     parser.add_argument("--check", action="store_true", help="Check formatting without making changes")
 
     args = parser.parse_args()
@@ -52,5 +57,8 @@ def main() -> int:
         result = subprocess.run(format_cmd, check=False)
         return result.returncode
     except FileNotFoundError:
-        print("Error: ruff is not installed. Install it with: pip install ruff", file=sys.stderr)
+        print(
+            "Error: ruff is not installed. Install it with: pip install ruff",
+            file=sys.stderr,
+        )
         return 1
