@@ -1,8 +1,10 @@
-.idea
-.vscode
+.idea/
+.vscode/
+.DS_Store
 
-pyasmobelt.egg-info
+pyasmobelt.egg-info/
 __pycache__/
+*.pyc
 
 .env
 prompt*.txt
