@@ -10,10 +10,10 @@ pyasmobelt is a personal CLI toolbox providing utilities for code file manipulat
 
 ```bash
 # Install locally for development
-pip install -e .
+make install   # or: pip install -e .
 
-# Format code (autoflake, isort, black with 120 line length)
-make format   # or: make f
+# Format code (ruff check + ruff format)
+make format    # or: make f
 ```
 
 ## CLI Usage
@@ -23,8 +23,18 @@ asmobelt <command> [options]
 ```
 
 **Commands:**
-- `concat-py-files` - Concatenate file contents into a single output file (useful for LLM prompts)
 - `add-path-comment` - Add file path as first-line comment to source files
+- `concat-py-files` - Concatenate file contents into a single output file (useful for LLM prompts)
+- `format` - Format Python code using ruff
+- `uuid` - Generate UUIDs
+
+**Docker commands:**
+- `docker-builder-prune` - Prune builder cache
+- `docker-container-prune` - Prune stopped containers
+- `docker-image-prune` - Prune dangling images
+- `docker-size` - Show docker images sizes
+- `docker-stop-all` - Stop all running containers
+- `docker-system-prune` - Prune system (containers, networks, images, cache)
 
 ## Architecture
 
@@ -37,8 +47,15 @@ To add a new command:
 1. Create `asmobelt/new_command.py` with a `main()` function
 2. Add the command to `COMMANDS` dict in `router.py`
 
+## Makefiles
+
+Modular makefiles live in `makefiles/` and are included from the root `Makefile`:
+- `format.mk` - Ruff-based formatting and linting
+- `asmobelt.mk` - Asmobelt CLI command targets
+- `install.mk` - Pip install target
+- `git.mk` - Git operations (available for inclusion)
+
 ## Code Style
 
-- Line length: 120 characters
-- Single-line imports (enforced by isort)
-- Use autoflake to remove unused imports
+- Line length: 120 characters (configured in pyproject.toml)
+- Formatting and linting via ruff

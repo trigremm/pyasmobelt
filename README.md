@@ -76,10 +76,36 @@ Example:
 asmobelt uuid -n 20 --upper-ratio 0.6 --block-case
 ```
 
-## Development
+#### format
 
-Format code:
+Format Python code using ruff.
 
 ```bash
-make format
+asmobelt format
 ```
+
+#### Docker commands
+
+```bash
+asmobelt docker-builder-prune    # Prune builder cache (>36h)
+asmobelt docker-container-prune  # Prune stopped containers
+asmobelt docker-image-prune      # Prune dangling images
+asmobelt docker-size             # Show docker images sizes
+asmobelt docker-stop-all         # Stop all running containers
+asmobelt docker-system-prune     # Prune system (containers, networks, images, cache)
+```
+
+## Development
+
+```bash
+make install   # pip install -e .
+make format    # ruff check --fix + ruff format (or: make f)
+```
+
+### Makefiles
+
+Modular makefiles in `makefiles/` included from root `Makefile`:
+- `format.mk` - Ruff-based formatting and linting
+- `asmobelt.mk` - Asmobelt CLI command targets
+- `install.mk` - Pip install
+- `git.mk` - Git operations (available for inclusion)

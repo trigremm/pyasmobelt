@@ -1,7 +1,7 @@
 [project]
 name = "pyasmobelt"
-version = "0.1.7"
-description = "Personal CLI toolbox (collect files, add path comments, and more)"
+version = "0.1.8"
+description = "Personal CLI toolbox (file utils, code formatting, docker helpers, and more)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
