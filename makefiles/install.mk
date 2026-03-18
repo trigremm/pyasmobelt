@@ -2,5 +2,7 @@
 
 .PHONY: install
 
-install:
+install: pull
 	pip install -e .
+
+i: install

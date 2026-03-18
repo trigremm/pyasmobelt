@@ -14,11 +14,7 @@ Key features:
 import argparse
 import os
 import sys
-from typing import Dict
-from typing import Iterable
-from typing import List
-from typing import Tuple
-from typing import Union
+from collections.abc import Iterable
 
 # ---------------------------
 # Configuration
@@ -57,7 +53,7 @@ DEFAULT_MAX_REMOVE = 3
 # ---------------------------
 # Helpers: Path & comment detection
 # ---------------------------
-def get_comment_syntax(file_name: str, file_ext: str) -> Union[str, Tuple[str, str], None]:
+def get_comment_syntax(file_name: str, file_ext: str) -> str | tuple[str, str] | None:
     """Return appropriate comment token or (open, close) for HTML/Vue."""
     if file_name in SUPPORTED_FILENAMES or file_ext in [
         ".py",
@@ -97,15 +93,11 @@ def _looks_like_file_path(content: str) -> bool:
         return True
 
     # Or a supported extension anywhere
-    root, ext = os.path.splitext(last)
-    if ext.lower() in SUPPORTED_EXTENSIONS:
-        return True
-
-    # In practice we only mark generated comments, so be conservative
-    return False
+    _root, ext = os.path.splitext(last)
+    return ext.lower() in SUPPORTED_EXTENSIONS
 
 
-def is_file_path_comment(line: str, comment_syntax: Union[str, Tuple[str, str]]) -> bool:
+def is_file_path_comment(line: str, comment_syntax: str | tuple[str, str]) -> bool:
     """Check whether a given trimmed line equals the "header path comment" shape."""
     s = line.strip()
     if not s:
@@ -175,7 +167,7 @@ def process_single_file(
             return "skipped"
 
         # Read file preserving newlines
-        with open(file_path, "r", encoding="utf-8", errors="replace") as f:
+        with open(file_path, encoding="utf-8", errors="replace") as f:
             data = f.read()
 
         if data == "":
@@ -210,7 +202,7 @@ def process_single_file(
             return "unchanged"
 
         # Insert header
-        new_lines = [new_header] + lines
+        new_lines = [new_header, *lines]
 
         if dry_run:
             # Don't write; just report what would change
@@ -230,14 +222,14 @@ def process_single_file(
         return "error"
 
 
-def collect_files_from_directory(root_dir_abs: str, ignore_dirs: Iterable[str]) -> List[str]:
+def collect_files_from_directory(root_dir_abs: str, ignore_dirs: Iterable[str]) -> list[str]:
     """
     Walk directory tree and collect absolute paths of processable files.
     - Returns absolute paths only.
     - Ignores directories by simple name match (case-sensitive).
     """
     ignore_set = set(ignore_dirs)
-    files: List[str] = []
+    files: list[str] = []
 
     for dirpath, dirnames, filenames in os.walk(root_dir_abs):
         # prune ignored dirs in-place
@@ -252,14 +244,14 @@ def collect_files_from_directory(root_dir_abs: str, ignore_dirs: Iterable[str]) 
 
 
 def process_files(
-    file_list: List[str],
+    file_list: list[str],
     root_dir: str,
     *,
     verbose: bool = False,
     dry_run: bool = False,
     max_remove: int = DEFAULT_MAX_REMOVE,
     trim_leading_blank: bool = True,
-) -> Dict[str, int]:
+) -> dict[str, int]:
     """Process a list of files, return stats dict."""
     if not file_list:
         print("No files to process.")
@@ -268,7 +260,7 @@ def process_files(
     root_dir_abs = os.path.abspath(root_dir)
 
     # Normalize to absolute paths
-    abs_files: List[str] = []
+    abs_files: list[str] = []
     for p in file_list:
         abs_files.append(p if os.path.isabs(p) else os.path.abspath(p))
 
@@ -295,7 +287,7 @@ def process_files(
         elif verbose and result == "skipped":
             print(f"⏭️  Skipped: {rel_for_print}")
         elif verbose and result == "unchanged":
-            print(f"➖ Unchanged: {rel_for_print}")
+            print(f"- Unchanged: {rel_for_print}")
 
     return stats
 
@@ -359,7 +351,7 @@ def main():
     args = parser.parse_args()
 
     # Collect file paths
-    all_files: List[str] = []
+    all_files: list[str] = []
 
     # From explicit list
     if args.files:
@@ -394,7 +386,7 @@ def main():
 
     # Deduplicate while preserving order
     seen = set()
-    unique_abs_files: List[str] = []
+    unique_abs_files: list[str] = []
     for p in all_files:
         ap = p if os.path.isabs(p) else os.path.abspath(p)
         if ap not in seen:

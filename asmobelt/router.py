@@ -29,7 +29,7 @@ COMMANDS = {
 def print_help():
     print(
         """
-asmobelt – personal CLI toolbox
+asmobelt - personal CLI toolbox
 
 Usage:
   asmobelt <command> [options]
@@ -67,6 +67,6 @@ def main(argv=None):
         return 1
 
     # Remove the command from sys.argv so underlying argparse sees clean args
-    sys.argv = [f"{argv[0]} {cmd}"] + argv[2:]
+    sys.argv = [f"{argv[0]} {cmd}", *argv[2:]]
 
     return COMMANDS[cmd]()

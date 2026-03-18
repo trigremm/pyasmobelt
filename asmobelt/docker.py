@@ -43,7 +43,7 @@ def stop_all_main() -> int:
         return 0
 
     print(f"Stopping {len(container_ids)} container(s)...")
-    return _run_command(["docker", "stop"] + container_ids)
+    return _run_command(["docker", "stop", *container_ids])
 
 
 def system_prune_main() -> int:

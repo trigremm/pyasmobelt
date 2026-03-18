@@ -36,10 +36,7 @@ def should_include(file: Path, include_exts, exclude_exts):
     name = file.name
     suffix = file.suffix
 
-    if name in include_exts or suffix in include_exts:
-        if name not in exclude_exts and suffix not in exclude_exts:
-            return True
-    return False
+    return (name in include_exts or suffix in include_exts) and name not in exclude_exts and suffix not in exclude_exts
 
 
 def is_ignored(path: Path, ignore_patterns):
@@ -88,13 +85,13 @@ def main():
     ignore_patterns = DEFAULT_IGNORE.union(set(args.ignore or []))
 
     include_exts = (
-        set(f".{ext.strip()}" if not ext.startswith(".") else ext.strip() for ext in args.include.split(","))
+        {f".{ext.strip()}" if not ext.startswith(".") else ext.strip() for ext in args.include.split(",")}
         if args.include
         else DEFAULT_EXTENSIONS
     )
 
     exclude_exts = (
-        set(f".{ext.strip()}" if not ext.startswith(".") else ext.strip() for ext in args.exclude.split(","))
+        {f".{ext.strip()}" if not ext.startswith(".") else ext.strip() for ext in args.exclude.split(",")}
         if args.exclude
         else set()
     )
