@@ -3,7 +3,7 @@ ASMOBELT_TARGET_DIR ?= .
 ASMOBELT_PROMPT_OUTPUT ?= prompt.txt
 
 .PHONY: add-path-comment concat-py-files
-.PHONY: asmobelt-format asmobelt-uuid
+.PHONY: asmobelt-format asmobelt-uuid git-pull-all
 .PHONY: docker-builder-prune docker-container-prune docker-image-prune docker-size docker-stop-all docker-system-prune
 
 add-path-comment:
@@ -17,6 +17,9 @@ asmobelt-format:
 
 asmobelt-uuid:
 	asmobelt uuid
+
+git-pull-all:
+	asmobelt git-pull-all -d $(ASMOBELT_TARGET_DIR)
 
 docker-builder-prune:
 	asmobelt docker-builder-prune

@@ -10,6 +10,7 @@ from .docker import size_main
 from .docker import stop_all_main
 from .docker import system_prune_main
 from .format import main as format_main
+from .git_pull_all import main as git_pull_all_main
 from .uuid import main as uuid_main
 
 COMMANDS = {
@@ -22,6 +23,7 @@ COMMANDS = {
     "docker-stop-all": stop_all_main,
     "docker-system-prune": system_prune_main,
     "format": format_main,
+    "git-pull-all": git_pull_all_main,
     "uuid": uuid_main,
 }
 
@@ -38,6 +40,7 @@ Commands:
   add-path-comment       Add file path as first-line comment
   concat-py-files        Concatenate file contents into single output
   format                 Format Python code using ruff
+  git-pull-all           Run git pull in every .git repo under a directory
   uuid                   Generate UUIDs
 
 Docker (danger zone - some require --confirm):
