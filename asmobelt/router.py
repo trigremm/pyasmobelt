@@ -2,6 +2,7 @@
 import sys
 
 from .add_file_path_comment import main as path_comment_main
+from .chown_backend import main as chown_backend_main
 from .collect_files_content import main as collect_main
 from .docker import builder_prune_main
 from .docker import container_prune_main
@@ -15,6 +16,7 @@ from .uuid import main as uuid_main
 
 COMMANDS = {
     "add-path-comment": path_comment_main,
+    "chown": chown_backend_main,
     "concat-py-files": collect_main,
     "docker-builder-prune": builder_prune_main,
     "docker-container-prune": container_prune_main,
@@ -38,6 +40,7 @@ Usage:
 
 Commands:
   add-path-comment       Add file path as first-line comment
+  chown                  sudo chown -R asmo:asmo on ./backend (or given path)
   concat-py-files        Concatenate file contents into single output
   format                 Format Python code using ruff
   git-pull-all           Run git pull in every .git repo under a directory
