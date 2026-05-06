@@ -11,6 +11,7 @@ from .docker import size_main
 from .docker import stop_all_main
 from .docker import system_prune_main
 from .format import main as format_main
+from .git_cleanup import main as git_cleanup_main
 from .git_pull_all import main as git_pull_all_main
 from .uuid import main as uuid_main
 
@@ -25,6 +26,7 @@ COMMANDS = {
     "docker-stop-all": stop_all_main,
     "docker-system-prune": system_prune_main,
     "format": format_main,
+    "git-cleanup": git_cleanup_main,
     "git-pull-all": git_pull_all_main,
     "uuid": uuid_main,
 }
@@ -43,6 +45,7 @@ Commands:
   chown                  sudo chown -R asmo:asmo on ./backend (or given path)
   concat-py-files        Concatenate file contents into single output
   format                 Format Python code using ruff
+  git-cleanup            Delete local branches merged into master/main/dev (dry-run by default)
   git-pull-all           Run git pull in every .git repo under a directory
   uuid                   Generate UUIDs
 

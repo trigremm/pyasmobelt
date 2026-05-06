@@ -4,7 +4,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 DEFAULT_EXCLUDES = {"node_modules", ".venv", "venv", "__pycache__"}
 
 
