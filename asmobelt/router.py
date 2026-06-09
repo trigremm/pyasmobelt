@@ -1,5 +1,6 @@
 # router.py
 import sys
+from importlib.metadata import PackageNotFoundError, version as _pkg_version
 
 from .add_file_path_comment import main as path_comment_main
 from .chown_backend import main as chown_backend_main
@@ -13,6 +14,7 @@ from .docker import system_prune_main
 from .format import main as format_main
 from .git_branch_all import main as git_branch_all_main
 from .git_cleanup import main as git_cleanup_main
+from .git_cleanup_all import main as git_cleanup_all_main
 from .git_pull_all import main as git_pull_all_main
 from .uuid import main as uuid_main
 
@@ -29,9 +31,24 @@ COMMANDS = {
     "format": format_main,
     "git-branch-all": git_branch_all_main,
     "git-cleanup": git_cleanup_main,
+    "git-cleanup-all": git_cleanup_all_main,
     "git-pull-all": git_pull_all_main,
     "uuid": uuid_main,
 }
+
+# Short aliases (case-insensitive: GPA == gpa)
+ALIASES = {
+    "gpa": "git-pull-all",
+    "gba": "git-branch-all",
+    "gca": "git-cleanup-all",
+}
+
+
+def get_version():
+    try:
+        return _pkg_version("pyasmobelt")
+    except PackageNotFoundError:
+        return "unknown"
 
 
 def print_help():
@@ -47,9 +64,10 @@ Commands:
   chown                  sudo chown -R asmo:asmo on ./backend (or given path)
   concat-py-files        Concatenate file contents into single output
   format                 Format Python code using ruff
-  git-branch-all         Show current branch of every .git repo under a directory
+  git-branch-all         Show current branch of every .git repo under a directory  (alias: GBA)
   git-cleanup            Delete local branches merged into master/main/dev (dry-run by default)
-  git-pull-all           Run git pull in every .git repo under a directory
+  git-cleanup-all        Run git-cleanup across every .git repo under a directory  (alias: GCA)
+  git-pull-all           Run git pull in every .git repo under a directory  (alias: GPA)
   uuid                   Generate UUIDs
 
 Docker (danger zone - some require --confirm):
@@ -72,6 +90,13 @@ def main(argv=None):
         return 0
 
     cmd = argv[1]
+
+    if cmd in ("--version", "-v", "version"):
+        print(f"asmobelt {get_version()}")
+        return 0
+
+    # Resolve short aliases (case-insensitive), e.g. GPA -> git-pull-all
+    cmd = ALIASES.get(cmd.lower(), cmd)
 
     if cmd not in COMMANDS:
         print(f"Unknown command: {cmd}\n")

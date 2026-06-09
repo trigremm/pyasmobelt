@@ -1,6 +1,6 @@
 [project]
 name = "pyasmobelt"
-version = "0.1.12"
+version = "0.1.14"
 description = "Personal CLI toolbox (file utils, code formatting, docker helpers, and more)"
 readme = "README.md"
 requires-python = ">=3.10"
