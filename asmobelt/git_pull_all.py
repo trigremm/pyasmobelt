@@ -6,20 +6,11 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-DEFAULT_EXCLUDES = {"node_modules", ".venv", "venv", "__pycache__"}
+from ._git_common import DEFAULT_EXCLUDES
+from ._git_common import _find_git_repos
+
 DEFAULT_JOBS = 8
 DEFAULT_TIMEOUT = 120
-
-
-def _find_git_repos(root: Path, excludes: set[str]) -> list[Path]:
-    repos: list[Path] = []
-    for git_dir in root.rglob(".git"):
-        if not git_dir.is_dir():
-            continue
-        if any(part in excludes for part in git_dir.parts):
-            continue
-        repos.append(git_dir.parent)
-    return sorted(repos)
 
 
 def _git_env() -> dict[str, str]:
