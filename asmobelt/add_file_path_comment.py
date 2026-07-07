@@ -80,6 +80,12 @@ def _looks_like_file_path(content: str) -> bool:
     if not content or len(content) > 300:
         return False
 
+    # A real path header we emit never contains internal whitespace. Reject
+    # legitimate first-line comments like "# see config.py" that merely end in
+    # a supported extension, to avoid stripping them as stale path headers.
+    if any(ch.isspace() for ch in content):
+        return False
+
     # Disallow some characters that do not belong to normal paths
     for ch in ["<", ">", "|", '"', "*", "?"]:
         if ch in content:

@@ -1,39 +1,39 @@
 # router.py
 import sys
-from importlib.metadata import PackageNotFoundError, version as _pkg_version
+from importlib import import_module
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
 
-from .add_file_path_comment import main as path_comment_main
-from .chown_backend import main as chown_backend_main
-from .collect_files_content import main as collect_main
-from .docker import builder_prune_main
-from .docker import container_prune_main
-from .docker import image_prune_main
-from .docker import size_main
-from .docker import stop_all_main
-from .docker import system_prune_main
-from .format import main as format_main
-from .git_branch_all import main as git_branch_all_main
-from .git_cleanup import main as git_cleanup_main
-from .git_cleanup_all import main as git_cleanup_all_main
-from .git_pull_all import main as git_pull_all_main
-from .uuid import main as uuid_main
+
+def _lazy(module: str, attr: str = "main"):
+    """Return a zero-arg callable that imports module.attr on first call.
+
+    Keeps command modules out of the import graph until a command actually
+    runs, so `import asmobelt.router` stays cheap (the cli.py lazy-import intent).
+    """
+
+    def _run():
+        return getattr(import_module(f".{module}", __package__), attr)()
+
+    return _run
+
 
 COMMANDS = {
-    "add-path-comment": path_comment_main,
-    "chown": chown_backend_main,
-    "concat-py-files": collect_main,
-    "docker-builder-prune": builder_prune_main,
-    "docker-container-prune": container_prune_main,
-    "docker-image-prune": image_prune_main,
-    "docker-size": size_main,
-    "docker-stop-all": stop_all_main,
-    "docker-system-prune": system_prune_main,
-    "format": format_main,
-    "git-branch-all": git_branch_all_main,
-    "git-cleanup": git_cleanup_main,
-    "git-cleanup-all": git_cleanup_all_main,
-    "git-pull-all": git_pull_all_main,
-    "uuid": uuid_main,
+    "add-path-comment": _lazy("add_file_path_comment"),
+    "chown": _lazy("chown_backend"),
+    "concat-py-files": _lazy("collect_files_content"),
+    "docker-builder-prune": _lazy("docker", "builder_prune_main"),
+    "docker-container-prune": _lazy("docker", "container_prune_main"),
+    "docker-image-prune": _lazy("docker", "image_prune_main"),
+    "docker-size": _lazy("docker", "size_main"),
+    "docker-stop-all": _lazy("docker", "stop_all_main"),
+    "docker-system-prune": _lazy("docker", "system_prune_main"),
+    "format": _lazy("format"),
+    "git-branch-all": _lazy("git_branch_all"),
+    "git-cleanup": _lazy("git_cleanup"),
+    "git-cleanup-all": _lazy("git_cleanup_all"),
+    "git-pull-all": _lazy("git_pull_all"),
+    "uuid": _lazy("uuid"),
 }
 
 # Short aliases (case-insensitive: GPA == gpa)
