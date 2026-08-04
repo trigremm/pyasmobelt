@@ -4,18 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-DEFAULT_EXCLUDES = {"node_modules", ".venv", "venv", "__pycache__"}
-
-
-def _find_git_repos(root: Path, excludes: set[str]) -> list[Path]:
-    repos: list[Path] = []
-    for git_dir in root.rglob(".git"):
-        if not git_dir.is_dir():
-            continue
-        if any(part in excludes for part in git_dir.parts):
-            continue
-        repos.append(git_dir.parent)
-    return sorted(repos)
+from ._git_common import DEFAULT_EXCLUDES
+from ._git_common import _find_git_repos
 
 
 def _current_branch(repo: Path) -> str:

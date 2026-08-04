@@ -63,7 +63,7 @@ def main() -> int:
     parser.add_argument(
         "--not-block-case",
         action="store_false",
-        help="Randomize case per dash-separated block instead of per letter.",
+        help="Randomize case per letter instead of per dash-separated block (default: per block).",
     )
 
     args = parser.parse_args()

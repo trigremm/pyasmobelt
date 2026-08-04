@@ -1,5 +1,6 @@
 # collect_files_content.py
 import argparse
+import os
 from pathlib import Path
 
 DEFAULT_IGNORE = {
@@ -51,22 +52,25 @@ def collect_file_contents(
     ignore_patterns,
 ):
     with open(output_file, "w", encoding="utf-8") as out:
-        for file_path in root_path.rglob("*"):
-            if not file_path.is_file():
-                continue
+        for dirpath, dirnames, filenames in os.walk(root_path):
+            # prune ignored dirs in-place so we never descend into them
+            dirnames[:] = [d for d in dirnames if d not in ignore_patterns]
 
-            if is_ignored(file_path, ignore_patterns):
-                continue
+            for filename in filenames:
+                file_path = Path(dirpath) / filename
 
-            if should_include(file_path, include_exts, exclude_exts):
-                try:
-                    rel_path = file_path.relative_to(root_path)
-                    out.write(f"{rel_path}:\n")
-                    out.write(file_path.read_text(encoding="utf-8"))
-                    out.write("\n\n")
-                    print(f"Included: {rel_path}")
-                except Exception as e:
-                    print(f"Error reading {file_path}: {e}")
+                if is_ignored(file_path, ignore_patterns):
+                    continue
+
+                if should_include(file_path, include_exts, exclude_exts):
+                    try:
+                        rel_path = file_path.relative_to(root_path)
+                        out.write(f"{rel_path}:\n")
+                        out.write(file_path.read_text(encoding="utf-8"))
+                        out.write("\n\n")
+                        print(f"Included: {rel_path}")
+                    except Exception as e:
+                        print(f"Error reading {file_path}: {e}")
 
 
 def main():

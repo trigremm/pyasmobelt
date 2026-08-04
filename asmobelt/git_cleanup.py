@@ -1,47 +1,18 @@
 # git_cleanup.py
 import argparse
-import subprocess
 import sys
 from pathlib import Path
 
-DEFAULT_PROTECTED = ("master", "main", "dev")
-
-
-def _run_git(repo: Path, *args: str, capture: bool = True) -> tuple[int, str]:
-    cmd = ["git", "-C", str(repo), *args]
-    result = subprocess.run(
-        cmd,
-        check=False,
-        capture_output=capture,
-        text=True,
-    )
-    return result.returncode, (result.stdout or "")
+from ._git_common import DEFAULT_PROTECTED
+from ._git_common import _current_branch
+from ._git_common import _local_branches
+from ._git_common import _merged_into
+from ._git_common import _run_git
 
 
 def _is_git_repo(repo: Path) -> bool:
     code, _ = _run_git(repo, "rev-parse", "--git-dir")
     return code == 0
-
-
-def _current_branch(repo: Path) -> str:
-    code, out = _run_git(repo, "rev-parse", "--abbrev-ref", "HEAD")
-    if code != 0:
-        return ""
-    return out.strip()
-
-
-def _local_branches(repo: Path) -> set[str]:
-    code, out = _run_git(repo, "for-each-ref", "--format=%(refname:short)", "refs/heads/")
-    if code != 0:
-        return set()
-    return {line.strip() for line in out.splitlines() if line.strip()}
-
-
-def _merged_into(repo: Path, branch: str) -> set[str]:
-    code, out = _run_git(repo, "branch", "--merged", branch, "--format=%(refname:short)")
-    if code != 0:
-        return set()
-    return {line.strip() for line in out.splitlines() if line.strip()}
 
 
 def main() -> int:

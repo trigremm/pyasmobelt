@@ -26,6 +26,11 @@ def main() -> int:
         format_cmd = ["ruff", "format", args.path]
 
     try:
+        if args.check:
+            # In check mode, a failure from either command must fail the command,
+            # so combine both return codes (non-zero from either wins).
+            rc = subprocess.run(check_cmd, check=False).returncode or subprocess.run(format_cmd, check=False).returncode
+            return rc
         # Run ruff check (linting: pycodestyle, pyflakes, isort, pylint, etc.)
         subprocess.run(check_cmd, check=False)
         # Run ruff format (black-like formatting)
