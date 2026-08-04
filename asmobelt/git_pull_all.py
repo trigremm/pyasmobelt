@@ -9,7 +9,7 @@ from pathlib import Path
 from ._git_common import DEFAULT_EXCLUDES
 from ._git_common import _find_git_repos
 
-DEFAULT_JOBS = 8
+DEFAULT_JOBS = 3
 DEFAULT_TIMEOUT = 120
 
 
@@ -59,7 +59,7 @@ def main() -> int:
         "--jobs",
         type=int,
         default=DEFAULT_JOBS,
-        help=f"Number of repos to pull in parallel (default: {DEFAULT_JOBS}).",
+        help=f"Number of repos to pull in parallel; keep low on slow networks (default: {DEFAULT_JOBS}).",
     )
     parser.add_argument(
         "--timeout",

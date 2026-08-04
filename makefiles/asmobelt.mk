@@ -20,7 +20,7 @@ asmobelt-uuid:
 	asmobelt uuid
 
 git-pull-all:
-	asmobelt git-pull-all -d $(ASMOBELT_TARGET_DIR)
+	asmobelt git-pull-all -d $(ASMOBELT_TARGET_DIR) $(if $(jobs),-j $(jobs))
 
 git-branch-all:
 	asmobelt git-branch-all -d $(ASMOBELT_TARGET_DIR)
