@@ -15,4 +15,9 @@ def cli() -> int:
     from .router import main as router_main
 
     # router_main already expects sys.argv (no need to manipulate here)
-    return router_main(sys.argv)
+    try:
+        return router_main(sys.argv)
+    except KeyboardInterrupt:
+        # Ctrl-C is a normal way to abort a long command; no traceback for it.
+        print("\nAborted.", file=sys.stderr)
+        return 130
