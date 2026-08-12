@@ -84,6 +84,27 @@ Format Python code using ruff.
 asmobelt format
 ```
 
+#### git-pull-all (alias: `GPA`)
+
+Find every `.git` repo under a directory and pull it, a few in parallel.
+
+Options:
+- `-d, --dir`: root directory to scan (default: current dir)
+- `--no-ff-only`: allow non-fast-forward pulls (default pulls with `--ff-only`)
+- `-j, --jobs`: repos pulled in parallel (default: 3)
+- `--timeout`: per-repo timeout in seconds (default: 120)
+- `--exclude`: extra directory name to skip (repeatable)
+
+Each repo prints as soon as it finishes, so a slow one never hides the rest. Git runs
+non-interactively (no credential/passphrase prompt can block it) with ssh
+`ConnectTimeout`/keepalives, so an unreachable remote fails in seconds rather than
+sitting on a dead connection. A repo that blows the timeout is killed along with its
+ssh child, and Ctrl-C stops the run cleanly, listing the repos it never got to.
+
+```bash
+asmobelt GPA -d /workspace -j 4 --timeout 60
+```
+
 #### Docker commands
 
 ```bash

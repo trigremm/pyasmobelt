@@ -1,43 +1,22 @@
 # git_pull_all.py
 import argparse
-import os
-import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import as_completed
 from pathlib import Path
 
 from ._git_common import DEFAULT_EXCLUDES
 from ._git_common import _find_git_repos
+from ._git_common import _kill_running
+from ._git_common import _run_git_captured
 
 DEFAULT_JOBS = 3
 DEFAULT_TIMEOUT = 120
 
 
-def _git_env() -> dict[str, str]:
-    """Force git to never block on an interactive prompt (credentials, SSH host keys)."""
-    env = dict(os.environ)
-    env["GIT_TERMINAL_PROMPT"] = "0"
-    env.setdefault("GIT_SSH_COMMAND", "ssh -oBatchMode=yes")
-    return env
-
-
 def _pull(repo: Path, ff_only: bool, timeout: int) -> tuple[bool, str]:
-    cmd = ["git", "-C", str(repo), "pull"]
-    if ff_only:
-        cmd.append("--ff-only")
-    try:
-        result = subprocess.run(
-            cmd,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            env=_git_env(),
-        )
-    except subprocess.TimeoutExpired:
-        return False, f"timed out after {timeout}s"
-    output = (result.stdout + result.stderr).strip()
-    return result.returncode == 0, output
+    args = ["pull", "--ff-only"] if ff_only else ["pull"]
+    return _run_git_captured(repo, *args, timeout=timeout)
 
 
 def main() -> int:
@@ -90,21 +69,40 @@ def main() -> int:
         return rel, ok, output
 
     jobs = max(1, args.jobs)
-    with ThreadPoolExecutor(max_workers=jobs) as pool:
-        for rel, ok, output in pool.map(work, repos):
+    pool = ThreadPoolExecutor(max_workers=jobs)
+    pending = {repo.relative_to(root) if repo != root else Path(".") for repo in repos}
+    interrupted = False
+    try:
+        futures = [pool.submit(work, repo) for repo in repos]
+        # as_completed, not pool.map: map yields in submission order, so one slow repo
+        # would hide every repo that finished after it.
+        for future in as_completed(futures):
+            rel, ok, output = future.result()
+            pending.discard(rel)
             status = "OK " if ok else "FAIL"
-            print(f"==> [{status}] {rel}")
+            print(f"==> [{status}] {rel}", flush=True)
             if output:
                 for line in output.splitlines():
-                    print(f"        {line}")
+                    print(f"        {line}", flush=True)
             if not ok:
                 failures.append(rel)
+    except KeyboardInterrupt:
+        interrupted = True
+        _kill_running()
+        print("\nInterrupted.", file=sys.stderr)
+        for rel in sorted(pending):
+            print(f"  - not pulled: {rel}", file=sys.stderr)
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)
+
+    if interrupted:
+        return 130
 
     print()
     print(f"Done. {len(repos) - len(failures)}/{len(repos)} repos pulled successfully.")
     if failures:
         print("Failed:")
-        for rel in failures:
+        for rel in sorted(failures):
             print(f"  - {rel}")
         return 1
     return 0
