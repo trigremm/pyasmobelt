@@ -10,7 +10,7 @@ from ._git_common import _find_git_repos
 from ._git_common import _kill_running
 from ._git_common import _run_git_captured
 
-DEFAULT_JOBS = 3
+DEFAULT_JOBS = 5
 DEFAULT_TIMEOUT = 120
 
 
@@ -41,6 +41,11 @@ def main() -> int:
         help=f"Number of repos to pull in parallel; keep low on slow networks (default: {DEFAULT_JOBS}).",
     )
     parser.add_argument(
+        "--sequential",
+        action="store_true",
+        help="Pull repos one at a time (overrides --jobs); use when parallel pulls choke the network.",
+    )
+    parser.add_argument(
         "--timeout",
         type=int,
         default=DEFAULT_TIMEOUT,
@@ -68,7 +73,7 @@ def main() -> int:
         ok, output = _pull(repo, ff_only, args.timeout)
         return rel, ok, output
 
-    jobs = max(1, args.jobs)
+    jobs = 1 if args.sequential else max(1, args.jobs)
     pool = ThreadPoolExecutor(max_workers=jobs)
     pending = {repo.relative_to(root) if repo != root else Path(".") for repo in repos}
     interrupted = False
