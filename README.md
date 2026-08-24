@@ -91,7 +91,8 @@ Find every `.git` repo under a directory and pull it, a few in parallel.
 Options:
 - `-d, --dir`: root directory to scan (default: current dir)
 - `--no-ff-only`: allow non-fast-forward pulls (default pulls with `--ff-only`)
-- `-j, --jobs`: repos pulled in parallel (default: 3)
+- `-j, --jobs`: repos pulled in parallel (default: 5)
+- `--sequential`: pull repos one at a time, overrides `--jobs`
 - `--timeout`: per-repo timeout in seconds (default: 120)
 - `--exclude`: extra directory name to skip (repeatable)
 
@@ -101,8 +102,25 @@ non-interactively (no credential/passphrase prompt can block it) with ssh
 sitting on a dead connection. A repo that blows the timeout is killed along with its
 ssh child, and Ctrl-C stops the run cleanly, listing the repos it never got to.
 
+If a large run dies partway through with `Connection timed out` on every remaining repo,
+lowering `--jobs` or reaching for `--sequential` will probably not help: some firewalls cut
+the host off once it opens enough SSH sessions in a short window, and that threshold counts
+total sessions, not concurrent ones. Reuse one connection instead, by adding to each GitHub
+`Host` block in `~/.ssh/config`:
+
+```
+    ControlMaster auto
+    ControlPath ~/.ssh/cm-%n
+    ControlPersist 300s
+```
+
+Use `%n`, not `%C`, when two `Host` aliases differ only by `IdentityFile`: `%C` hashes just
+host/port/user, so the aliases collide on one socket and the second one silently
+authenticates with the first one's key.
+
 ```bash
 asmobelt GPA -d /workspace -j 4 --timeout 60
+asmobelt GPA -d /workspace --sequential
 ```
 
 #### Docker commands
