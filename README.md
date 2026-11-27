@@ -81,7 +81,8 @@ asmobelt uuid -n 20 --upper-ratio 0.6 --not-block-case
 Format Python code using ruff.
 
 ```bash
-asmobelt format
+asmobelt format            # current directory
+asmobelt format src --check  # report only, exit 1 if anything would change
 ```
 
 #### git-pull-all (alias: `GPA`)
@@ -123,6 +124,48 @@ asmobelt GPA -d /workspace -j 4 --timeout 60
 asmobelt GPA -d /workspace --sequential
 ```
 
+#### chown
+
+Run `sudo chown -R asmo:asmo` on a directory (default: `backend`).
+
+```bash
+asmobelt chown            # backend/
+asmobelt chown ./data
+```
+
+#### git-branch-all (alias: `GBA`)
+
+Find every `.git` repo under a directory and print its current branch.
+
+Options:
+- `-d, --dir`: root directory to scan (default: current dir)
+- `--exclude`: extra directory name to skip (repeatable)
+
+#### git-cleanup
+
+Delete local branches already merged into master/main/dev in one repo. Dry-run unless `--confirm` is given.
+
+Options:
+- `-d, --dir`: repository directory (default: current dir)
+- `--protected`: extra protected branch (repeatable; master/main/dev are always protected)
+- `--confirm`: actually delete (default is a dry-run)
+- `-f, --force`: use `git branch -D` instead of `-d`
+
+#### git-cleanup-all (alias: `GCA`)
+
+Same as `git-cleanup`, for every `.git` repo under a directory. Takes the `git-cleanup` options plus `--exclude` (extra directory name to skip, repeatable).
+
+```bash
+asmobelt GCA -d /workspace            # dry-run across the workspace
+asmobelt GCA -d /workspace --confirm
+```
+
+#### version
+
+```bash
+asmobelt version          # also: asmobelt --version / -v
+```
+
 #### Docker commands
 
 ```bash
@@ -133,6 +176,8 @@ asmobelt docker-size             # Show docker images sizes
 asmobelt docker-stop-all         # Stop all running containers
 asmobelt docker-system-prune     # Prune system (containers, networks, images, cache)
 ```
+
+`docker-container-prune`, `docker-stop-all` and `docker-system-prune` refuse to run without `--confirm`.
 
 ## Development
 
