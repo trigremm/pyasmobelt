@@ -36,11 +36,13 @@ GPA: git-pull-all
 GBA: git-branch-all
 GCA: git-cleanup-all
 
+# Destructive docker targets need CONFIRM=1 (asmobelt itself refuses without --confirm):
+#   make docker-stop-all CONFIRM=1
 docker-builder-prune:
 	asmobelt docker-builder-prune
 
 docker-container-prune:
-	asmobelt docker-container-prune
+	asmobelt docker-container-prune $(if $(CONFIRM),--confirm)
 
 docker-image-prune:
 	asmobelt docker-image-prune
@@ -49,7 +51,7 @@ docker-size:
 	asmobelt docker-size
 
 docker-stop-all:
-	asmobelt docker-stop-all
+	asmobelt docker-stop-all $(if $(CONFIRM),--confirm)
 
 docker-system-prune:
-	asmobelt docker-system-prune
+	asmobelt docker-system-prune $(if $(CONFIRM),--confirm)
