@@ -1,8 +1,8 @@
 # install-pip.mk - Pip install commands
 
-.PHONY: install
+.PHONY: install i
 
-install: pull
+install:
 	pip install -e .
 
 i: install
