@@ -62,7 +62,7 @@ To add a new command:
 Modular makefiles live in `makefiles/` and are included from the root `Makefile`:
 - `format.mk` - Ruff-based formatting and linting
 - `asmobelt.mk` - Asmobelt CLI command targets
-- `install.mk` - Pip install target (note: `make install` runs `git pull` first)
+- `install.mk` - Pip install target
 - `git.mk` - Git operations (available for inclusion)
 - `clean.mk` - Remove build/cache leftovers (`__pycache__`, `.ruff_cache`, egg-info)
 
